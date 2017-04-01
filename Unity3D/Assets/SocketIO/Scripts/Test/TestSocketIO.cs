@@ -76,27 +76,4 @@ public class TestSocketIO : MonoBehaviour
 		GameObject go = GameObject.Find (ch.objectName);
 		go.transform.position = new Vector3 (ch.x, 0, -ch.y);
 	}
-	
-	public void TestBoop(SocketIOEvent e)
-	{
-		Debug.Log("[SocketIO] Boop received: " + e.name + " " + e.data);
-
-		if (e.data == null) { return; }
-
-		Debug.Log(
-			"#####################################################" +
-			"THIS: " + e.data.GetField("this").str +
-			"#####################################################"
-		);
-	}
-	
-	public void TestError(SocketIOEvent e)
-	{
-		Debug.Log("[SocketIO] Error received: " + e.name + " " + e.data);
-	}
-	
-	public void TestClose(SocketIOEvent e)
-	{	
-		Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
-	}
 }
