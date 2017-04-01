@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Unity Socket IO</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 13px Helvetica, Arial; }
+            form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+            form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
+            form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+            #messages { list-style-type: none; margin: 0px 0px 43px; padding: 0;}
+            #messages li { padding: 5px 10px; background: #e0feff; }
+            #messages li:nth-child(odd) { background: #eee; }
+            span.waktu {
+                background: #0091D0;
+                padding: 2px 8px;
+                color: #fff;
+            }
+            pre {
+                padding: 17px 10px 7px;
+                font-size: 14px;
+            }
+            #send {margin-right: .5%;}
+            #reset {background: #080}
+
+            .object {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="messages">
+            <div class="object" id="object_0001" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0002" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0003" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0004" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0005" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0006" style="top: 10px;left: 150px;"></div>
+            <div class="object" id="object_0007" style="top: 10px;left: 150px;"></div>
+        </div>
+        <form action="">
+            <input id="m" autocomplete="off" /><button id="send">Send</button><button type="button" id="reset">Clear</button>
+        </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/files/jquery.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            var socket = io();
+            var identity = "ID-"+Math.floor(Math.random()*100000);
+            
+            function processLocation(selector) {
+                return {
+                    type: "CROWD",
+                    identity : identity,
+                    objectName : selector.attr("id"),
+                    x: selector.position().left,
+                    y: selector.position().top
+                };
+            }
+            
+            $( ".object" ).draggable({
+                drag: function() {
+                    socket.emit('character', processLocation($(this)));
+                },
+            });
+
+            socket.on('character', function (msg) {
+                if(msg.identity != identity){
+                    $("#"+msg.objectName).css("top",msg.y);
+                    $("#"+msg.objectName).css("left",msg.x);
+                }
+            });
+        </script>
+    </body>
+</html>
